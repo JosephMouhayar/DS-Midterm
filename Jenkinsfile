@@ -1,10 +1,17 @@
 pipeline {
     agent any
 
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/Main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/JosephMouhayar/DS-Midterm.git']]])
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build('dsmid')
+                    dockerImage = docker.build('dsmidt')
                 }
             }
         }
@@ -12,7 +19,7 @@ pipeline {
         stage('Display Docker Image ID') {
             steps {
                 script {
-                    def dockerImageId = sh(script: "docker inspect --format='{{.Id}}' dsmid", returnStdout: true).trim()
+                    def dockerImageId = sh(script: "docker inspect --format='{{.Id}}' dsmidt", returnStdout: true).trim()
                     echo "Docker Image ID: ${dockerImageId}"
                 }
             }
